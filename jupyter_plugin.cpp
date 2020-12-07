@@ -56,6 +56,7 @@
 #include "xwidgets/xradiobuttons.hpp"
 #include "xwidgets/xselect.hpp"
 #include "xwidgets/xselectionslider.hpp"
+#include "xwidgets/xbox.hpp"
 
 using namespace std;
 using namespace ug::bridge;
@@ -94,7 +95,7 @@ struct func_traits< typename T::max_property T::* > : public xproperty_traits
 	{ return obj->max(); };
 };
 
-// Step!
+//! Step
 template <typename T>
 struct func_traits< typename T::step_property T::* > : public xproperty_traits
 {
@@ -106,7 +107,7 @@ struct func_traits< typename T::step_property T::* > : public xproperty_traits
 };
 
 
-// Value!
+//! Value
 template <typename T>
 struct func_traits< typename T::value_property T::* > : public xproperty_traits
 {
@@ -117,7 +118,7 @@ struct func_traits< typename T::value_property T::* > : public xproperty_traits
 	{ return obj->value(); };
 };
 
-// Value!
+//! Orientation
 template <typename T>
 struct func_traits< typename T::orientation_property T::* > : public xproperty_traits
 {
@@ -128,6 +129,29 @@ struct func_traits< typename T::orientation_property T::* > : public xproperty_t
 	{ return obj->orientation(); };
 };
 
+//! Description
+template <typename T>
+struct func_traits< typename T::description_property T::* > : public xproperty_traits
+{
+	typedef typename T::description_property::value_type return_type;
+
+	template <typename TFunction>
+	static return_type apply(TFunction, T* obj, xproperty_traits::DummyArgs& args)
+	{ return obj->description(); };
+};
+
+/*
+// General style.
+template <typename T, typename XProperty>
+struct func_traits<XProperty T::* > : public xproperty_traits
+{
+	typedef typename XProperty::value_type return_type;
+
+	template <typename TFunction>
+	static return_type apply(TFunction, T* obj, xproperty_traits::DummyArgs& args)
+	{ return obj->description(); };
+};
+*/
 
 }
 
@@ -340,6 +364,7 @@ static void Common(Registry& reg, string grp)
 						.add_method("min", &xwSlider::min)
 						.add_method("max", &xwSlider::max)
 						.add_method("value", &xwSlider::value)
+						.add_method("description", &xwSlider::description)
 						.add_method("orientation", &xwSlider::orientation)
 						.construct_as_smart_pointer();
 	}
@@ -363,38 +388,53 @@ static void Common(Registry& reg, string grp)
 	}
 
 	{
-			typedef typename xw::dropdown xwDropDown;
-			reg.add_class_<xwDropDown>("xwDropDown", grp)
-			   .template add_constructor<void (*)(std::vector<std::string>,std::string)>("Function(s)#Subset(s)")
-			   .add_method("display", &xwDropDown::display, "displays object")
-			   .add_method("value", &xwDropDown::value)
-			   .construct_as_smart_pointer();
+		typedef typename xw::dropdown xwDropDown;
+		reg.add_class_<xwDropDown>("xwDropDown", grp)
+		   .template add_constructor<void (*)(std::vector<std::string>,std::string)>("Function(s)#Subset(s)")
+		   .add_method("display", &xwDropDown::display, "displays object")
+		   .add_method("value", &xwDropDown::value)
+		   .construct_as_smart_pointer();
 	}
 
 	{
-				typedef typename xw::radiobuttons xwRadioButtons;
-				reg.add_class_<xwRadioButtons>("xwRadioButtons", grp)
-				   .template add_constructor<void (*)(std::vector<std::string>,std::string)>("Function(s)#Subset(s)")
-				   .add_method("display", &xwRadioButtons::display, "displays object")
-				   .add_method("value", &xwRadioButtons::value)
-				   .construct_as_smart_pointer();
+		typedef typename xw::radiobuttons xwRadioButtons;
+		reg.add_class_<xwRadioButtons>("xwRadioButtons", grp)
+		   .template add_constructor<void (*)(std::vector<std::string>,std::string)>("Function(s)#Subset(s)")
+		   .add_method("display", &xwRadioButtons::display, "displays object")
+		   .add_method("value", &xwRadioButtons::value)
+		   .construct_as_smart_pointer();
 	}
 
 	{
-					typedef typename xw::select xwSelect;
-					reg.add_class_<xwSelect>("xwSelect", grp)
-					   .template add_constructor<void (*)(std::vector<std::string>,std::string)>("Function(s)#Subset(s)")
-					   .add_method("display", &xwSelect::display, "displays object")
-					   .add_method("value", &xwSelect::value)
-					   .construct_as_smart_pointer();
+		typedef typename xw::select xwSelect;
+		reg.add_class_<xwSelect>("xwSelect", grp)
+		   .template add_constructor<void (*)(std::vector<std::string>,std::string)>("Function(s)#Subset(s)")
+		   .add_method("display", &xwSelect::display, "displays object")
+		   .add_method("value", &xwSelect::value)
+		   .construct_as_smart_pointer();
 	}
+
 	{
-						typedef typename xw::selectionslider xwSelectionSlider;
-						reg.add_class_<xwSelectionSlider>("xwSelectionSlider", grp)
-						   .template add_constructor<void (*)(std::vector<std::string>,std::string)>("Function(s)#Subset(s)")
-						   .add_method("display", &xwSelectionSlider::display, "displays object")
-						   .add_method("value", &xwSelectionSlider::value)
-						   .construct_as_smart_pointer();
+		typedef typename xw::selectionslider xwSelectionSlider;
+		reg.add_class_<xwSelectionSlider>("xwSelectionSlider", grp)
+		   .template add_constructor<void (*)(std::vector<std::string>,std::string)>("Function(s)#Subset(s)")
+		   .add_method("display", &xwSelectionSlider::display, "displays object")
+		   .add_method("value", &xwSelectionSlider::value)
+		   .construct_as_smart_pointer();
+	}
+
+
+
+	// Container
+	{
+		typedef typename xw::vbox xwVBox;
+		reg.add_class_<xwVBox>("xwVBox", grp)
+		   .template add_constructor<void (*)()>()
+		   .add_method("display", &xwVBox::display, "displays object")
+		   //.add_method("add", &(xwVBox::*add)())
+		   //.add_method("remove", &(xwVBox::*remove)())
+		   .add_method("clear", &xwVBox::clear)
+		   .construct_as_smart_pointer();
 	}
 }
 
