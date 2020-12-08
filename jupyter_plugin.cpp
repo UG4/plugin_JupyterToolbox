@@ -57,6 +57,7 @@
 #include "xwidgets/xselect.hpp"
 #include "xwidgets/xselectionslider.hpp"
 #include "xwidgets/xbox.hpp"
+#include "xproperty/xproperty.hpp"
 
 using namespace std;
 using namespace ug::bridge;
@@ -133,25 +134,30 @@ struct func_traits< typename T::orientation_property T::* > : public xproperty_t
 template <typename T>
 struct func_traits< typename T::description_property T::* > : public xproperty_traits
 {
-	typedef typename T::description_property::value_type return_type;
+	typedef typename T::orientation_property::value_type return_type;
 
 	template <typename TFunction>
 	static return_type apply(TFunction, T* obj, xproperty_traits::DummyArgs& args)
 	{ return obj->description(); };
 };
 
-/*
-// General style.
-template <typename T, typename XProperty>
-struct func_traits<XProperty T::* > : public xproperty_traits
+//! General style (only!).
+template <typename V, typename M, typename O>
+struct func_traits<xp::xproperty<V,M> O::* > : public xproperty_traits
 {
-	typedef typename XProperty::value_type return_type;
+	typedef V return_type;
+	typedef xp::xproperty<V,M> property_type;
 
 	template <typename TFunction>
-	static return_type apply(TFunction, T* obj, xproperty_traits::DummyArgs& args)
-	{ return obj->description(); };
+	static return_type apply(TFunction fnc_ptr, O* obj, xproperty_traits::DummyArgs& args)
+	{
+		V value;
+		// value = obj->value(); // for value only
+		value = (obj->*fnc_ptr)();
+		return value;
+	};
 };
-*/
+
 
 }
 
