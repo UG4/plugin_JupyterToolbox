@@ -47,59 +47,28 @@ cmake_minimum_required(VERSION 3.1)
 
 project(UG_PLUGIN_${pluginName})
 
-# WE require C++ 17
+if(NOT USE_XEUS)
+	message(SEND_ERROR "Xeus option missing. Plugin is deactivated. To activate: '-DUSE_XEUS=ON'.")
+endif(NOT USE_XEUS) 
+
+# This plugin requires C++ 17
 set (CMAKE_CXX_STANDARD 17)
 set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17")
-
-
-# Various Xeus libs
-find_package(xwidgets REQUIRED) 
-find_package(xeus REQUIRED)
-find_package(xtl REQUIRED)
-
-message(STATUS "Jupyter-Plugin: xwidgets_FOUND=${xwidgets_FOUND} ${xwidgets_INCLUDE_DIRS}")
-message(STATUS "Jupyter-Plugin: xeus_FOUND=${xeus_FOUND} ${xeus_INCLUDE_DIRS} ")
-message(STATUS "Jupyter-Plugin: xtl_FOUND=${xtl_FOUND} ${xtl_INCLUDE_DIRS}")
-
-# Find libraries
-if(NOT DEFINED ${xeus_LIBRARY})
-	find_library(xeus_LIBRARY NAMES xeus PATHS "${xtl_INCLUDE_DIRS}/../lib")
-endif() 
-
-if(NOT DEFINED ${xwidgets_LIBRARY})
-	find_library(xwidgets_LIBRARY NAMES xtl PATHS "${xtl_INCLUDE_DIRS}/../lib")
-endif() 
-
-message(STATUS "Jupyter-Plugin: using  ${xeus_LIBRARY} ${xwidgets_LIBRARY}")   
-
-
-
-
-# We also need  'zeromq' and 'sodium'
-## load in pkg-config support
-message(STATUS "Jupyter-Plugin: Checking pkg-config ${CMAKE_PREFIX_PATH}")
-find_package(PkgConfig)
-pkg_check_modules(PC_ZeroMQ zmq) ## use pkg-config to get hints for 0mq locations
-pkg_check_modules(PC_Sodium sodium) ## use pkg-config to get hints for sodium locations
-
-## use the hint from about to find the location of libzmq, sodium
-if(NOT DEFINED ${PC_ZeroMQ_LIBRARY_DIRS})
-	set (PC_ZeroMQ_LIBRARY_DIRS "${xtl_INCLUDE_DIRS}/../lib")
-	message(WARNING "Jupyter-Plugin: $PC_ZeroMQ_LIBRARY_DIRS not defined.")
-endif()	
-
-find_library(ZeroMQ_LIBRARY NAMES zmq PATHS ${PC_ZeroMQ_LIBRARY_DIRS})
-find_library(sodium_LIBRARY NAMES sodium PATHS ${PC_ZeroMQ_LIBRARY_DIRS})
 
 
 # include the definitions and dependencies for ug-plugins.
 include(${UG_ROOT_CMAKE_PATH}/ug_plugin_includes.cmake)
 
+set (xeus_INCLUDE_DIRS "/Users/anaegel/Software/third-party/xeus/include")
+set (xwidgets_INCLUDE_DIRS "/Users/anaegel/Software/third-party/xwidgets/include")
+set (xproperty_INCLUDE_DIRS "/Users/anaegel/Software/third-party/xproperty/include")
 
 # Expand include path
-include_directories(AFTER ${xtl_INCLUDE_DIRS}
-	# ${xeus_INCLUDE_DIRS}
-	# ${xwidgets_INCLUDE_DIRS}
+include_directories(AFTER 
+	#${xeus_INCLUDE_DIRS}
+    #${xwidgets_INCLUDE_DIRS}
+    #${xproperty_INCLUDE_DIRS}
+    ${xtl_INCLUDE_DIRS}
 	)
 	
 
