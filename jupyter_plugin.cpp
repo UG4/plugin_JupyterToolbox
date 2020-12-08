@@ -74,6 +74,23 @@ struct xproperty_traits
 	typedef TypeValueList<params_type> DummyArgs;
 };
 
+//! General style (only!).
+template <typename V, typename M, typename O>
+struct func_traits<xp::xproperty<V,M> O::* > : public xproperty_traits
+{
+	typedef V return_type;
+	typedef xp::xproperty<V,M> property_type;
+
+	template <typename TFunction>
+	static return_type apply(TFunction fnc_ptr, O* obj, xproperty_traits::DummyArgs& args)
+	{
+		V value;
+		// value = obj->value(); // for value only
+		value = (obj->*fnc_ptr)();
+		return value;
+	}
+};
+
 //! Min
 template <typename T>
 struct func_traits< typename T::min_property T::* > : public xproperty_traits
@@ -134,29 +151,14 @@ struct func_traits< typename T::orientation_property T::* > : public xproperty_t
 template <typename T>
 struct func_traits< typename T::description_property T::* > : public xproperty_traits
 {
-	typedef typename T::orientation_property::value_type return_type;
+	typedef typename T::description_property::value_type return_type;
 
 	template <typename TFunction>
 	static return_type apply(TFunction, T* obj, xproperty_traits::DummyArgs& args)
 	{ return obj->description(); };
 };
 
-//! General style (only!).
-template <typename V, typename M, typename O>
-struct func_traits<xp::xproperty<V,M> O::* > : public xproperty_traits
-{
-	typedef V return_type;
-	typedef xp::xproperty<V,M> property_type;
 
-	template <typename TFunction>
-	static return_type apply(TFunction fnc_ptr, O* obj, xproperty_traits::DummyArgs& args)
-	{
-		V value;
-		// value = obj->value(); // for value only
-		value = (obj->*fnc_ptr)();
-		return value;
-	};
-};
 
 
 }
