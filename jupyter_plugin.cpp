@@ -50,13 +50,21 @@
 // xwidgets
 #include "xwidgets/xslider.hpp"
 #include "xwidgets/xnumeral.hpp"
+#include "xwidgets/xprogress.hpp"
+
+#include "xwidgets/xtext.hpp"
+#include "xwidgets/xtextarea.hpp"
+
 #include "xwidgets/xtogglebuttons.hpp"
 #include "xwidgets/xselection.hpp"
 #include "xwidgets/xdropdown.hpp"
 #include "xwidgets/xradiobuttons.hpp"
 #include "xwidgets/xselect.hpp"
 #include "xwidgets/xselectionslider.hpp"
+
+
 #include "xwidgets/xbox.hpp"
+
 #include "xproperty/xproperty.hpp"
 
 using namespace std;
@@ -74,7 +82,8 @@ struct xproperty_traits
 	typedef TypeValueList<params_type> DummyArgs;
 };
 
-//! General style (only!).
+
+//! General version.
 template <typename V, typename M, typename O>
 struct func_traits<xp::xproperty<V,M> O::* > : public xproperty_traits
 {
@@ -91,6 +100,7 @@ struct func_traits<xp::xproperty<V,M> O::* > : public xproperty_traits
 	}
 };
 
+/*
 //! Min
 template <typename T>
 struct func_traits< typename T::min_property T::* > : public xproperty_traits
@@ -158,7 +168,7 @@ struct func_traits< typename T::description_property T::* > : public xproperty_t
 	{ return obj->description(); };
 };
 
-
+*/
 
 
 }
@@ -386,6 +396,27 @@ static void Common(Registry& reg, string grp)
 		   .add_method("value", &xwNumeral::value)
 		   .construct_as_smart_pointer();
 	}
+
+	{
+		typedef xw::text xwText;
+		reg.add_class_<xwText>("xwText", grp)
+		   .add_constructor()
+		   .add_method("display", &xwText::display, "displays object")
+		   .add_method("value", &xwText::value)
+		   .construct_as_smart_pointer();
+	}
+
+	{
+		typedef xw::textarea xwTextArea;
+		reg.add_class_<xwTextArea>("xwTextArea", grp)
+		   .add_constructor()
+		   .add_method("display", &xwTextArea::display, "displays object")
+		   .add_method("value", &xwTextArea::value)
+		   .construct_as_smart_pointer();
+	}
+
+
+
 	{
 		typedef typename xw::togglebuttons xwToggleButtons;
 		reg.add_class_<xwToggleButtons>("xwToggleButtons", grp)
@@ -430,6 +461,16 @@ static void Common(Registry& reg, string grp)
 		   .add_method("value", &xwSelectionSlider::value)
 		   .construct_as_smart_pointer();
 	}
+
+	{
+			typedef typename xw::progress<double> xwProgress;
+			reg.add_class_<xwProgress>("xwProgress", grp)
+			   .template add_constructor<void (*)()>("Function(s)#Subset(s)")
+			   .add_method("display", &xwProgress::display, "displays object")
+			   .add_method("value", &xwProgress::value)
+			   .construct_as_smart_pointer();
+	}
+
 
 
 
