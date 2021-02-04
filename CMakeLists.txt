@@ -59,16 +59,12 @@ set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17")
 # include the definitions and dependencies for ug-plugins.
 include(${UG_ROOT_CMAKE_PATH}/ug_plugin_includes.cmake)
 
-set (xeus_INCLUDE_DIRS "/Users/anaegel/Software/third-party/xeus/include")
-set (xwidgets_INCLUDE_DIRS "/Users/anaegel/Software/third-party/xwidgets/include")
-set (xproperty_INCLUDE_DIRS "/Users/anaegel/Software/third-party/xproperty/include")
+# set (sodium_INCLUDE_DIRS "<Add path here..>")
 
 # Expand include path
 include_directories(AFTER 
-	#${xeus_INCLUDE_DIRS}
-    #${xwidgets_INCLUDE_DIRS}
-    #${xproperty_INCLUDE_DIRS}
     ${xtl_INCLUDE_DIRS}
+    # ${sodium_INCLUDE_DIRS}
 	)
 	
 
