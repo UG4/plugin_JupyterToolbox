@@ -94,10 +94,11 @@ struct func_traits<xp::xproperty<V,M> O::* > : public xproperty_traits
 	static return_type apply(TFunction fnc_ptr, O* obj, xproperty_traits::DummyArgs& args)
 	{
 		V value;
-		// value = obj->value(); // for value only
 		value = (obj->*fnc_ptr)();
 		return value;
 	}
+
+	static const bool custom_return=false;
 };
 
 /*

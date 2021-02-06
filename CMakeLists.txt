@@ -59,14 +59,16 @@ set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17")
 # include the definitions and dependencies for ug-plugins.
 include(${UG_ROOT_CMAKE_PATH}/ug_plugin_includes.cmake)
 
-# set (sodium_INCLUDE_DIRS "<Add path here..>")
+
 
 # Expand include path
 include_directories(AFTER 
     ${xtl_INCLUDE_DIRS}
-    # ${sodium_INCLUDE_DIRS}
 	)
-	
+
+
+set(cppzmq_REQUIRED_VERSION 4.3.0)
+find_package(cppzmq ${cppzmq_REQUIRED_VERSION} REQUIRED)
 
 if(buildEmbeddedPlugins)
 	# add the sources to ug4's sources
@@ -76,6 +78,6 @@ else(buildEmbeddedPlugins)
 	add_library(${pluginName} SHARED ${SOURCES})
 	target_link_libraries (${pluginName} PUBLIC ug4 
 	 	${xeus_LIBRARY} ${xwidgets_LIBRARY}
-	 	${sodium_LIBRARY} ${ZeroMQ_LIBRARY}
+	 	${SODIUM_LINK_LIBRARIES} ${ZEROMQ_LINK_LIBRARIES}
 	 	)
 endif(buildEmbeddedPlugins)
